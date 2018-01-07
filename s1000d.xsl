@@ -596,6 +596,15 @@
     </fo:block>
   </xsl:template>
 
+  <xsl:template match="table" mode="number">
+    <xsl:number count="content|table" level="any" from="dmodule"/>
+  </xsl:template>
+
+  <xsl:template match="table" mode="label">
+    <xsl:text>Table </xsl:text>
+    <xsl:apply-templates select="." mode="number"/>
+  </xsl:template>
+
   <xsl:template match="tgroup">
     <fo:table table-layout="fixed" width="100%">
       <xsl:apply-templates select="*"/>
