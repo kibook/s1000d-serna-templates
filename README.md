@@ -1,1 +1,1 @@
-S1000D document templates for Syntext Serna
+WIP document templates for editing S1000D data modules with Syntext Serna.
