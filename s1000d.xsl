@@ -582,7 +582,15 @@
 
   <xsl:template match="table">
     <fo:block padding-top="{$standard-leading}">
-      <fo:block start-indent="20mm" border-top-color="black" border-top-width="0.5pt" border-bottom-color="black" border-bottom-width="0.5pt">
+      <fo:block border-top-color="black" border-top-width="0.5pt" border-bottom-color="black" border-bottom-width="0.5pt">
+        <xsl:attribute name="start-indent">
+          <xsl:choose>
+            <xsl:when test="@pgwide and @pgwide != 0">0pt</xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$inner-type-limit"/>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:attribute>
         <xsl:apply-templates select="*"/>
       </fo:block>
     </fo:block>
