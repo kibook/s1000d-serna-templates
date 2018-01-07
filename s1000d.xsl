@@ -583,14 +583,14 @@
   <xsl:template match="table">
     <fo:block padding-top="{$standard-leading}">
       <fo:block start-indent="20mm" border-top-color="black" border-top-width="0.5pt" border-bottom-color="black" border-bottom-width="0.5pt">
-        <xsl:apply-templates/>
+        <xsl:apply-templates select="*"/>
       </fo:block>
     </fo:block>
   </xsl:template>
 
   <xsl:template match="tgroup">
     <fo:table table-layout="fixed" width="100%">
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="*"/>
     </fo:table>
   </xsl:template>
 
@@ -615,19 +615,19 @@
 
   <xsl:template match="thead">
     <fo:table-header font-weight="bold">
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="*"/>
     </fo:table-header>
   </xsl:template>
 
   <xsl:template match="tbody">
     <fo:table-body>
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="*"/>
     </fo:table-body>
   </xsl:template>
 
   <xsl:template match="row">
     <fo:table-row>
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="*"/>
     </fo:table-row>
   </xsl:template>
 
@@ -637,7 +637,7 @@
         <xsl:attribute name="border-bottom-color">black</xsl:attribute>
         <xsl:attribute name="border-bottom-width">0.5pt</xsl:attribute>
       </xsl:if>
-      <xsl:apply-templates/>
+      <xsl:apply-templates select="*"/>
     </fo:table-cell>
   </xsl:template>
 
