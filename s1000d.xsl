@@ -191,35 +191,37 @@
   <xsl:template name="references">
     <fo:block>
       <fo:block xsl:use-attribute-sets="centerhead2">References</fo:block>
-      <fo:block text-align="center" font-style="italic">Table 1  References</fo:block>
-      <fo:table table-layout="fixed" width="100%" border-top-width="0.5pt" border-top-color="black" border-bottom-width="0.5pt" border-bottom-color="black">
-        <fo:table-column column-width="proportional-column-width(1)"/>
-        <fo:table-column column-width="proportional-column-width(1)"/>
-        <fo:table-header font-weight="bold">
-          <fo:table-row>
-            <fo:table-cell border-bottom-color="black" border-bottom-width="0.5pt">
-              <fo:block>Data module/Technical publication</fo:block>
-            </fo:table-cell>
-            <fo:table-cell border-bottom-color="black" border-bottom-width="0.5pt">
-              <fo:block>Title</fo:block>
-            </fo:table-cell>
-          </fo:table-row>
-        </fo:table-header>
-        <fo:table-body>
-          <xsl:choose>
-            <xsl:when test="refs">
-              <xsl:apply-templates select="refs/*" mode="refs"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <fo:table-row>
-                <fo:table-cell>
-                  <fo:block>None</fo:block>
-                </fo:table-cell>
-              </fo:table-row>
-            </xsl:otherwise>
-          </xsl:choose>
-        </fo:table-body>
-      </fo:table>
+      <fo:block padding-top="{$standard-leading}">
+        <fo:block text-align="center" font-style="italic">Table 1  References</fo:block>
+        <fo:table table-layout="fixed" width="100%" border-top-width="0.5pt" border-top-color="black" border-bottom-width="0.5pt" border-bottom-color="black">
+          <fo:table-column column-width="proportional-column-width(1)"/>
+          <fo:table-column column-width="proportional-column-width(1)"/>
+          <fo:table-header font-weight="bold">
+            <fo:table-row>
+              <fo:table-cell border-bottom-color="black" border-bottom-width="0.5pt">
+                <fo:block>Data module/Technical publication</fo:block>
+              </fo:table-cell>
+              <fo:table-cell border-bottom-color="black" border-bottom-width="0.5pt">
+                <fo:block>Title</fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+          </fo:table-header>
+          <fo:table-body>
+            <xsl:choose>
+              <xsl:when test="refs">
+                <xsl:apply-templates select="refs/*" mode="refs"/>
+              </xsl:when>
+              <xsl:otherwise>
+                <fo:table-row>
+                  <fo:table-cell>
+                    <fo:block>None</fo:block>
+                  </fo:table-cell>
+                </fo:table-row>
+              </xsl:otherwise>
+            </xsl:choose>
+          </fo:table-body>
+        </fo:table>
+      </fo:block>
     </fo:block>
   </xsl:template>
 
