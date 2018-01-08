@@ -175,9 +175,9 @@
   <xsl:template name="footer">
     <fo:block>
       <fo:table table-layout="fixed" table-width="100%">
+        <fo:table-column column-width="proportional-column-width(2)"/>
         <fo:table-column column-width="proportional-column-width(1)"/>
-        <fo:table-column column-width="proportional-column-width(1)"/>
-        <fo:table-column column-width="proportional-column-width(1)"/>
+        <fo:table-column column-width="proportional-column-width(2)"/>
         <fo:table-body>
           <fo:table-row>
             <fo:table-cell text-align="left" number-rows-spanned="2">
