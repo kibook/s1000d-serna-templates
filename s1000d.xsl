@@ -695,7 +695,6 @@
       </fo:block>
       <fo:block font-style="italic">
         <xsl:text>Fig </xsl:text>
-        <xsl:number count="figure" level="any" from="dmodule"/>
         <xsl:apply-templates select="parent::figure" mode="number"/>
         <xsl:text>  </xsl:text>
         <fo:inline>
