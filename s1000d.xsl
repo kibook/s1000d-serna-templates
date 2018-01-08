@@ -77,6 +77,8 @@
 
   <xsl:param name="page-height">297mm</xsl:param>
   <xsl:param name="page-width">210mm</xsl:param>
+  <xsl:param name="page-margin-top">11mm</xsl:param>
+  <xsl:param name="page-margin-bottom">12mm</xsl:param>
   <xsl:param name="page-margin-left">25mm</xsl:param>
   <xsl:param name="page-margin-right">15mm</xsl:param>
 
@@ -142,7 +144,7 @@
     <fo:root>
       <fo:layout-master-set>
         <fo:simple-page-master master-name="page" page-height="{$page-height}" page-width="{$page-width}">
-          <fo:region-body margin-left="{$page-margin-left}" margin-right="{$page-margin-right}"/>
+          <fo:region-body margin-left="{$page-margin-left}" margin-right="{$page-margin-right}" margin-top="{$page-margin-top}" margin-bottom="{$page-margin-bottom}"/>
         </fo:simple-page-master>
       </fo:layout-master-set>
       <fo:page-sequence master-reference="page">
