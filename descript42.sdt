@@ -2,7 +2,7 @@
 <!DOCTYPE t:document-template PUBLIC "-//Syntext//DTD Syntext Document Template V2.0//EN" "doctemplate.dtd"[]>
 <t:document-template xmlns:t="http://www.syntext.com/Extensions/DocTemplate-2.0">
   <t:name>Descriptive</t:name>
-  <t:category>S1000D4.2</t:category>
+  <t:category>S1000D 4.2</t:category>
   <t:xml-stylesheet>$SERNA_TEMPLATE_DIR/s1000d.xsl</t:xml-stylesheet>
   <t:xml-schema>$SERNA_TEMPLATE_DIR/s1000d42/xml_schema_flat/descript.xsd</t:xml-schema>
   <t:nons-schema-guess-string>http://www.s1000d.org/S1000D_4-2/xml_schema_flat/descript.xsd</t:nons-schema-guess-string>
