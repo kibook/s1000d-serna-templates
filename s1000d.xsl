@@ -312,9 +312,35 @@
     <fo:block>
       <fo:block xsl:use-attribute-sets="sidehead0">Table of contents</fo:block>
       <fo:table table-layout="fixed" width="100%" start-indent="{$inner-type-limit}">
+        <fo:table-column column-width="15mm"/>
         <fo:table-column column-width="proportional-column-width(1)"/>
         <fo:table-column column-width="proportional-column-width(1)"/>
         <fo:table-body>
+          <fo:table-row>
+            <fo:table-cell text-align="left" number-columns-spanned="2">
+              <fo:block>
+                <xsl:choose>
+                  <xsl:when test="/dmodule/identAndStatusSection/dmAddress/dmAddressItems/dmTitle/infoName">
+                    <xsl:value-of select="/dmodule/identAndStatusSection/dmAddress/dmAddressItems/dmTitle/infoName"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:value-of select="/dmodule/identAndStatusSection/dmAddress/dmAddressItems/dmTitle/techName"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </fo:block>
+            </fo:table-cell>
+            <fo:table-cell text-align="right">
+              <fo:block>1</fo:block>
+            </fo:table-cell>
+          </fo:table-row>
+          <fo:table-row>
+            <fo:table-cell text-align="left" number-columns-spanned="2">
+              <fo:block>References</fo:block>
+            </fo:table-cell>
+            <fo:table-cell text-align="right">
+              <fo:block>1</fo:block>
+            </fo:table-cell>
+          </fo:table-row>
           <xsl:apply-templates select="*" mode="toc"/>
         </fo:table-body>
       </fo:table>
@@ -408,17 +434,27 @@
     </fo:table-row>
   </xsl:template>
 
-  <xsl:template match="*" mode="toc"/>
-
-  <xsl:template match="description" mode="toc">
+  <xsl:template name="toc-centerhead">
     <fo:table-row>
-      <fo:table-cell text-align="left">
-        <fo:block>Description</fo:block>
+      <fo:table-cell text-align="left" number-columns-spanned="2">
+        <fo:block>
+          <xsl:choose>
+            <xsl:when test="self::description">Description</xsl:when>
+            <xsl:when test="self::preliminaryRqmts">Preliminary requirements</xsl:when>
+            <xsl:when test="self::mainProcedure">Procedure</xsl:when>
+          </xsl:choose>
+        </fo:block>
       </fo:table-cell>
       <fo:table-cell text-align="right">
         <fo:block>1</fo:block>
       </fo:table-cell>
     </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="*" mode="toc"/>
+
+  <xsl:template match="description" mode="toc">
+    <xsl:call-template name="toc-centerhead"/>
     <xsl:apply-templates select="*" mode="toc"/>
   </xsl:template>
 
@@ -427,25 +463,12 @@
   </xsl:template>
 
   <xsl:template match="preliminaryRqmts" mode="toc">
-    <fo:table-row>
-      <fo:table-cell text-align="left">
-        <fo:block>Preliminary requirements</fo:block>
-      </fo:table-cell>
-      <fo:table-cell text-align="right">
-        <fo:block>1</fo:block>
-      </fo:table-cell>
-    </fo:table-row>
+    <xsl:call-template name="toc-centerhead"/>
   </xsl:template>
 
   <xsl:template match="mainProcedure" mode="toc">
-    <fo:table-row>
-      <fo:table-cell text-align="left">
-        <fo:block>Procedure</fo:block>
-      </fo:table-cell>
-      <fo:table-cell text-align="right">
-        <fo:block>1</fo:block>
-      </fo:table-cell>
-    </fo:table-row>
+    <xsl:call-template name="toc-centerhead"/>
+    <xsl:apply-templates select="*" mode="toc"/>
   </xsl:template>
 
   <xsl:template match="preliminaryRqmts">
@@ -460,6 +483,11 @@
 
   <xsl:template match="levelledPara[title]|proceduralStep[title]" mode="toc">
     <fo:table-row>
+      <fo:table-cell text-align="left">
+        <fo:block>
+          <xsl:apply-templates select="." mode="number"/>
+        </fo:block>
+      </fo:table-cell>
       <fo:table-cell text-align="left">
         <fo:block>
           <xsl:apply-templates select="title" mode="toc"/>
