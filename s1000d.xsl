@@ -268,7 +268,7 @@
     <xsl:call-template name="list-of-tables"/>
     <xsl:call-template name="list-of-figures"/>
     <xsl:call-template name="references"/>
-    <xsl:apply-templates select="*"/>
+    <xsl:apply-templates select="description|procedure"/>
   </xsl:template>
 
   <xsl:template name="references">
@@ -306,6 +306,43 @@
         </fo:table>
       </fo:block>
     </fo:block>
+  </xsl:template>
+
+  <xsl:template match="dmRef" mode="refs">
+    <fo:table-row>
+      <fo:table-cell>
+        <fo:block>
+          <xsl:apply-templates select="."/>
+        </fo:block>
+      </fo:table-cell>
+      <xsl:if test="dmRefAddressItems/dmTitle">
+        <fo:table-cell>
+          <fo:block>
+            <xsl:apply-templates select="dmRefAddressItems/dmTitle" mode="refs"/>
+          </fo:block>
+        </fo:table-cell>
+      </xsl:if>
+    </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="dmTitle" mode="refs">
+    <xsl:apply-templates select="techName" mode="refs"/>
+    <xsl:if test="infoName">
+      <xsl:text> - </xsl:text>
+      <xsl:apply-templates select="infoName" mode="refs"/>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="techName" mode="refs">
+    <fo:inline>
+      <xsl:apply-templates/>
+    </fo:inline>
+  </xsl:template>
+
+  <xsl:template match="infoName" mode="refs">
+    <fo:inline>
+      <xsl:apply-templates/>
+    </fo:inline>
   </xsl:template>
 
   <xsl:template name="table-of-contents">
