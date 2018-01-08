@@ -116,11 +116,11 @@
   </xsl:template>
 
   <xsl:template name="header">
-    <fo:block font-weight="bold" text-align="center" padding-bottom="5mm">Unclassified</fo:block>
+    <fo:block font-weight="bold" text-align="center" padding-bottom="5mm" font-size="11pt">Unclassified</fo:block>
   </xsl:template>
 
   <xsl:template name="footer">
-    <fo:block font-weight="bold">
+    <fo:block>
       <fo:table table-layout="fixed" table-width="100%">
         <fo:table-column column-width="proportional-column-width(1)"/>
         <fo:table-column column-width="proportional-column-width(1)"/>
@@ -133,10 +133,10 @@
                 <xsl:apply-templates select="identAndStatusSection/dmStatus/applic/displayText"/>
               </fo:block>
             </fo:table-cell>
-            <fo:table-cell text-align="center">
-              <fo:block>End of data module</fo:block>
+            <fo:table-cell text-align="center" font-weight="bold">
+              <fo:block font-size="11pt">End of data module</fo:block>
             </fo:table-cell>
-            <fo:table-cell text-align="right">
+            <fo:table-cell text-align="right" font-weight="bold">
               <fo:block>
                 <xsl:apply-templates select="identAndStatusSection/dmAddress/dmIdent/dmCode"/>
               </fo:block>
