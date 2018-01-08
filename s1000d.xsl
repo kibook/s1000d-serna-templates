@@ -678,6 +678,11 @@
     <xsl:apply-templates select="title" mode="title"/>
   </xsl:template>
 
+  <xsl:template match="figure" mode="label">
+    <xsl:text>Fig </xsl:text>
+    <xsl:apply-templates select="." mode="number"/>
+  </xsl:template>
+
   <xsl:template match="title" mode="title">
     <xsl:apply-templates/>
   </xsl:template>
