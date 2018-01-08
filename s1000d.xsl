@@ -441,6 +441,7 @@
           <xsl:choose>
             <xsl:when test="self::description">Description</xsl:when>
             <xsl:when test="self::preliminaryRqmts">Preliminary requirements</xsl:when>
+            <xsl:when test="self::closeRqmts">Requirements after job completion</xsl:when>
             <xsl:when test="self::mainProcedure">Procedure</xsl:when>
           </xsl:choose>
         </fo:block>
@@ -490,7 +491,7 @@
       </fo:table-cell>
       <fo:table-cell text-align="left">
         <fo:block>
-          <xsl:apply-templates select="title" mode="toc"/>
+          <xsl:value-of select="title"/>
         </fo:block>
       </fo:table-cell>
       <fo:table-cell text-align="right">
@@ -498,10 +499,6 @@
       </fo:table-cell>
     </fo:table-row>
     <xsl:apply-templates select="*" mode="toc"/>
-  </xsl:template>
-
-  <xsl:template match="title" mode="toc">
-    <xsl:apply-templates/>
   </xsl:template>
 
   <xsl:template match="description">
@@ -1009,6 +1006,10 @@
       <fo:block xsl:use-attribute-sets="centerhead2">Requirements after job completion</fo:block>
       <xsl:apply-templates select="*"/>
     </fo:block>
+  </xsl:template>
+
+  <xsl:template match="closeRqmts" mode="toc">
+    <xsl:call-template name="toc-centerhead"/>
   </xsl:template>
 
 </xsl:stylesheet>
