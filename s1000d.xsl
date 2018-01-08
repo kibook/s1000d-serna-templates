@@ -352,7 +352,7 @@
               <fo:block>1</fo:block>
             </fo:table-cell>
           </fo:table-row>
-          <xsl:apply-templates select=".//table" mode="lotbl"/>
+          <xsl:apply-templates select=".//table|.//reqCondGroup|.//reqSupportEquips|.//reqSupplies|.//reqSpares" mode="lotbl"/>
         </fo:table-body>
       </fo:table>
     </fo:block>
@@ -374,6 +374,19 @@
       <fo:table-cell text-align="left">
         <fo:block>
           <xsl:value-of select="title"/>
+        </fo:block>
+      </fo:table-cell>
+      <fo:table-cell text-align="right">
+        <fo:block>1</fo:block>
+      </fo:table-cell>
+    </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="reqCondGroup|reqSupportEquips|reqSupplies|reqSpares" mode="lotbl">
+    <fo:table-row>
+      <fo:table-cell text-align="left">
+        <fo:block>
+          <xsl:apply-templates select="." mode="title"/>
         </fo:block>
       </fo:table-cell>
       <fo:table-cell text-align="right">
@@ -729,11 +742,11 @@
     </fo:block>
   </xsl:template>
 
-  <xsl:template match="table" mode="number">
-    <xsl:number count="content|table" level="any" from="dmodule"/>
+  <xsl:template match="table|reqCondGroup|reqSupportEquips|reqSupplies|reqSpares" mode="number">
+    <xsl:number count="content|reqCondGroup|reqSupportEquips|reqSupplies|reqSpares|table" level="any" from="dmodule"/>
   </xsl:template>
 
-  <xsl:template match="table" mode="label">
+  <xsl:template match="table|reqCondGroup|reqSupportEquips|reqSupplies|reqSpares" mode="label">
     <xsl:text>Table </xsl:text>
     <xsl:apply-templates select="." mode="number"/>
   </xsl:template>
@@ -802,6 +815,11 @@
     <fo:block>
       <fo:block xsl:use-attribute-sets="sidehead0">Required conditions</fo:block>
       <fo:block padding-top="{$standard-leading}">
+        <fo:block font-style="italic" text-align="center">
+          <xsl:apply-templates select="." mode="label"/>
+          <xsl:text>  </xsl:text>
+          <xsl:apply-templates select="." mode="title"/>
+        </fo:block>
         <fo:table xsl:use-attribute-sets="table">
           <fo:table-header font-weight="bold">
             <fo:table-row>
@@ -821,16 +839,26 @@
     </fo:block>
   </xsl:template>
 
+  <xsl:template match="reqCondGroup|reqSupportEquips|reqSupplies|reqSpares" mode="title">
+    <xsl:choose>
+      <xsl:when test="self::reqCondGroup">Required conditions</xsl:when>
+      <xsl:when test="self::reqSupportEquips">Support equipment</xsl:when>
+      <xsl:when test="self::reqSupplies">Consumables, materials and expendables</xsl:when>
+      <xsl:when test="self::reqSpares">Spares</xsl:when>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:template match="reqSupportEquips|reqSupplies|reqSpares">
     <fo:block>
       <fo:block xsl:use-attribute-sets="sidehead0">
-        <xsl:choose>
-          <xsl:when test="self::reqSupportEquips">Support equipment</xsl:when>
-          <xsl:when test="self::reqSupplies">Consumables, materials and expendables</xsl:when>
-          <xsl:when test="self::reqSpares">Spares</xsl:when>
-        </xsl:choose>
+        <xsl:apply-templates select="." mode="title"/>
       </fo:block>
       <fo:block padding-top="{$standard-leading}">
+        <fo:block font-style="italic" text-align="center">
+          <xsl:apply-templates select="." mode="label"/>
+          <xsl:text>  </xsl:text>
+          <xsl:apply-templates select="." mode="title"/>
+        </fo:block>
         <fo:table xsl:use-attribute-sets="table">
           <fo:table-header font-weight="bold">
             <fo:table-row>
