@@ -482,6 +482,7 @@
             <xsl:when test="self::preliminaryRqmts">Preliminary requirements</xsl:when>
             <xsl:when test="self::closeRqmts">Requirements after job completion</xsl:when>
             <xsl:when test="self::mainProcedure">Procedure</xsl:when>
+            <xsl:when test="self::commonInfo">Common information</xsl:when>
           </xsl:choose>
         </fo:block>
       </fo:table-cell>
@@ -1133,6 +1134,16 @@
       </xsl:if>
       <xsl:apply-templates/>
     </fo:block>
+  </xsl:template>
+
+  <xsl:template match="commonInfo">
+    <fo:block xsl:use-attribute-sets="centerhead2">Common information</fo:block>
+    <xsl:apply-templates select="*"/>
+  </xsl:template>
+
+  <xsl:template match="commonInfo" mode="toc">
+    <xsl:call-template name="toc-centerhead"/>
+    <xsl:apply-templates select="*" mode="toc"/>
   </xsl:template>
 
 </xsl:stylesheet>
