@@ -462,7 +462,7 @@
     <fo:table-row>
       <fo:table-cell text-align="left">
         <fo:block>
-          <xsl:value-of select="title"/>
+          <xsl:apply-templates select="." mode="title"/>
         </fo:block>
       </fo:table-cell>
       <fo:table-cell text-align="right">
@@ -636,7 +636,7 @@
 
   <xsl:template match="para">
     <fo:block>
-      <xsl:if test="not(parent::entry)">
+      <xsl:if test="not(parent::entry|parent::listItem)">
         <xsl:attribute name="start-indent">
           <xsl:value-of select="$inner-type-limit"/>
         </xsl:attribute>
@@ -860,7 +860,9 @@
     </fo:table-row>
   </xsl:template>
 
-  <xsl:template match="entry">
+  <xsl:template match="entry"/>
+
+  <xsl:template match="entry[*]">
     <fo:table-cell>
       <xsl:if test="parent::row/parent::thead">
         <xsl:attribute name="border-bottom-color">black</xsl:attribute>
@@ -956,6 +958,10 @@
         <fo:block>None</fo:block>
       </fo:table-cell>
     </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="supportEquipDescrGroup|supplyDescrGroup|spareDescrGroup">
+    <xsl:apply-templates select="*"/>
   </xsl:template>
 
   <xsl:template match="supportEquipDescr|supplyDescr|spareDescr">
@@ -1065,6 +1071,48 @@
         <xsl:apply-templates select="identNumber"/>
       </xsl:otherwise>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="randomList|sequentialList">
+    <fo:block>
+      <xsl:apply-templates select="title"/>
+      <fo:list-block provisional-distance-between-starts="7mm">
+        <xsl:apply-templates select="listItem"/>
+      </fo:list-block>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="randomList/title|sequentialList/title">
+    <fo:block font-weight="bold">
+      <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="listItem">
+    <fo:list-item>
+      <fo:list-item-label end-indent="label-end()">
+        <fo:block>
+          <xsl:apply-templates select="." mode="label"/>
+        </fo:block>
+      </fo:list-item-label>
+      <fo:list-item-body start-indent="body-start()">
+        <fo:block>
+          <xsl:apply-templates select="para"/>
+        </fo:block>
+      </fo:list-item-body>
+    </fo:list-item>
+  </xsl:template>
+
+  <xsl:template match="randomList/listItem" mode="label">
+    <xsl:text>-</xsl:text>
+  </xsl:template>
+  
+  <xsl:template match="sequentialList/listItem" mode="label">
+    <xsl:apply-templates select="." mode="number"/>
+  </xsl:template>
+
+  <xsl:template match="listItem" mode="number">
+    <xsl:number count="listItem" level="multiple"/>
   </xsl:template>
 
 </xsl:stylesheet>
