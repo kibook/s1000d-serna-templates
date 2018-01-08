@@ -1054,4 +1054,18 @@
     <xsl:call-template name="toc-centerhead"/>
   </xsl:template>
 
+  <xsl:template match="supportEquipDescr|supplyDescr|spareDescr" mode="label">
+    <xsl:choose>
+      <xsl:when test="shortName">
+        <xsl:apply-templates select="shortName"/>
+      </xsl:when>
+      <xsl:when test="name">
+        <xsl:apply-templates select="name"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="identNumber"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
 </xsl:stylesheet>
