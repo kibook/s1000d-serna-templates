@@ -61,6 +61,20 @@
     <xsl:attribute name="padding-top">11pt</xsl:attribute>
   </xsl:attribute-set>
 
+  <xsl:attribute-set name="table">
+    <xsl:attribute name="table-layout">fixed</xsl:attribute>
+    <xsl:attribute name="width">100%</xsl:attribute>
+    <xsl:attribute name="border-top-color">black</xsl:attribute>
+    <xsl:attribute name="border-top-width">0.5pt</xsl:attribute>
+    <xsl:attribute name="border-bottom-color">black</xsl:attribute>
+    <xsl:attribute name="border-bottom-width">0.5pt</xsl:attribute>
+  </xsl:attribute-set>
+
+  <xsl:attribute-set name="header-cell">
+    <xsl:attribute name="border-bottom-width">0.5pt</xsl:attribute>
+    <xsl:attribute name="border-bottom-color">black</xsl:attribute>
+  </xsl:attribute-set>
+
   <xsl:param name="page-height">297mm</xsl:param>
   <xsl:param name="page-width">210mm</xsl:param>
   <xsl:param name="page-margin-left">25mm</xsl:param>
@@ -326,7 +340,43 @@
     <xsl:apply-templates select="*" mode="toc"/>
   </xsl:template>
 
-  <xsl:template match="levelledPara" mode="toc">
+  <xsl:template match="procedure" mode="toc">
+    <xsl:apply-templates select="*" mode="toc"/>
+  </xsl:template>
+
+  <xsl:template match="preliminaryRqmts" mode="toc">
+    <fo:table-row>
+      <fo:table-cell text-align="left">
+        <fo:block>Preliminary requirements</fo:block>
+      </fo:table-cell>
+      <fo:table-cell text-align="right">
+        <fo:block>1</fo:block>
+      </fo:table-cell>
+    </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="mainProcedure" mode="toc">
+    <fo:table-row>
+      <fo:table-cell text-align="left">
+        <fo:block>Procedure</fo:block>
+      </fo:table-cell>
+      <fo:table-cell text-align="right">
+        <fo:block>1</fo:block>
+      </fo:table-cell>
+    </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="preliminaryRqmts">
+    <fo:block xsl:use-attribute-sets="centerhead2">Preliminary requirements</fo:block>
+    <xsl:apply-templates select="*"/>
+  </xsl:template>
+
+  <xsl:template match="mainProcedure">
+    <fo:block xsl:use-attribute-sets="centerhead2">Procedure</fo:block>
+    <xsl:apply-templates select="*"/>
+  </xsl:template>
+
+  <xsl:template match="levelledPara[title]|proceduralStep[title]" mode="toc">
     <fo:table-row>
       <fo:table-cell text-align="left">
         <fo:block>
@@ -337,6 +387,7 @@
         <fo:block>1</fo:block>
       </fo:table-cell>
     </fo:table-row>
+    <xsl:apply-templates select="*" mode="toc"/>
   </xsl:template>
 
   <xsl:template match="title" mode="toc">
@@ -348,19 +399,19 @@
     <xsl:apply-templates select="*"/>
   </xsl:template>
 
-  <xsl:template match="levelledPara[title]">
+  <xsl:template match="levelledPara[title]|proceduralStep[title]">
     <fo:block>
       <xsl:apply-templates select="*"/>
     </fo:block>
   </xsl:template>
 
-  <xsl:template match="levelledPara">
+  <xsl:template match="levelledPara|proceduralStep">
     <fo:block padding-top="{$standard-leading}">
       <fo:list-block provisional-distance-between-starts="{$inner-type-limit}">
         <fo:list-item>
           <fo:list-item-label end-indent="label-end()">
             <fo:block>
-              <xsl:number count="levelledPara" level="multiple"/>
+              <xsl:apply-templates select="." mode="number"/>
             </fo:block>
           </fo:list-item-label>
           <fo:list-item-body start-indent="body-start()">
@@ -378,18 +429,27 @@
     <xsl:number count="levelledPara" level="multiple" from="dmodule"/>
   </xsl:template>
 
+  <xsl:template match="proceduralStep" mode="number">
+    <xsl:number count="proceduralStep" level="multiple" from="dmodule"/>
+  </xsl:template>
+
   <xsl:template match="levelledPara" mode="label">
     <xsl:text>Para </xsl:text>
     <xsl:apply-templates select="." mode="number"/>
   </xsl:template>
 
-  <xsl:template match="levelledPara/title">
+  <xsl:template match="proceduralStep" mode="label">
+    <xsl:text>Step </xsl:text>
+    <xsl:apply-templates select="." mode="number"/>
+  </xsl:template>
+
+  <xsl:template match="levelledPara/title|proceduralStep/title">
     <xsl:variable name="content">
       <fo:list-block provisional-distance-between-starts="{$inner-type-limit}">
         <fo:list-item>
           <fo:list-item-label end-indent="label-end()">
             <fo:block>
-              <xsl:apply-templates select="parent::levelledPara" mode="number"/>
+              <xsl:apply-templates select="parent::*" mode="number"/>
             </fo:block>
           </fo:list-item-label>
           <fo:list-item-body start-indent="body-start()">
@@ -400,7 +460,7 @@
         </fo:list-item>
       </fo:list-block>
     </xsl:variable>
-    <xsl:variable name="level" select="count(ancestor::levelledPara)"/>
+    <xsl:variable name="level" select="count(ancestor::levelledPara|ancestor::proceduralStep)"/>
     <xsl:choose>
       <xsl:when test="$level = 1">
         <fo:block xsl:use-attribute-sets="sidehead1">
@@ -663,6 +723,145 @@
     <fo:inline color="blue" text-decoration="underline">
       <xsl:apply-templates select="//*[@id = $target-id]" mode="label"/>
     </fo:inline>
+  </xsl:template>
+
+  <xsl:template match="reqCondGroup">
+    <fo:block>
+      <fo:block xsl:use-attribute-sets="sidehead0">Required conditions</fo:block>
+      <fo:block padding-top="{$standard-leading}">
+        <fo:table xsl:use-attribute-sets="table">
+          <fo:table-header font-weight="bold">
+            <fo:table-row>
+              <fo:table-cell xsl:use-attribute-sets="header-cell">
+                <fo:block>Action/Condition</fo:block>
+              </fo:table-cell>
+              <fo:table-cell xsl:use-attribute-sets="header-cell">
+                <fo:block>Data module</fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+          </fo:table-header>
+          <fo:table-body>
+            <xsl:apply-templates select="*"/>
+          </fo:table-body>
+        </fo:table>
+      </fo:block>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="reqSupportEquips|reqSupplies|reqSpares">
+    <fo:block>
+      <fo:block xsl:use-attribute-sets="sidehead0">
+        <xsl:choose>
+          <xsl:when test="self::reqSupportEquips">Support equipment</xsl:when>
+          <xsl:when test="self::reqSupplies">Consumables, materials and expendables</xsl:when>
+          <xsl:when test="self::reqSpares">Spares</xsl:when>
+        </xsl:choose>
+      </fo:block>
+      <fo:block padding-top="{$standard-leading}">
+        <fo:table xsl:use-attribute-sets="table">
+          <fo:table-header font-weight="bold">
+            <fo:table-row>
+              <fo:table-cell xsl:use-attribute-sets="header-cell">
+                <fo:block>Name</fo:block>
+              </fo:table-cell>
+              <fo:table-cell xsl:use-attribute-sets="header-cell">
+                <fo:block>Identification/Reference</fo:block>
+              </fo:table-cell>
+              <fo:table-cell xsl:use-attribute-sets="header-cell">
+                <fo:block>Quantity</fo:block>
+              </fo:table-cell>
+              <fo:table-cell xsl:use-attribute-sets="header-cell">
+                <fo:block>Remark</fo:block>
+              </fo:table-cell>
+            </fo:table-row>
+          </fo:table-header>
+          <fo:table-body>
+            <xsl:apply-templates select="*"/>
+          </fo:table-body>
+        </fo:table>
+      </fo:block>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="noSupportEquips|noSupplies|noSpares|noConds">
+    <fo:table-row>
+      <fo:table-cell>
+        <fo:block>None</fo:block>
+      </fo:table-cell>
+    </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="supportEquipDescr|supplyDescr|spareDescr">
+    <fo:table-row>
+      <fo:table-cell>
+        <fo:block>
+          <xsl:apply-templates select="name"/>
+        </fo:block>
+      </fo:table-cell>
+      <fo:table-cell>
+        <fo:block>
+          <xsl:apply-templates select="identNumber"/>
+        </fo:block>
+      </fo:table-cell>
+      <fo:table-cell>
+        <fo:block>
+          <xsl:apply-templates select="reqQuantity"/>
+        </fo:block>
+      </fo:table-cell>
+      <xsl:if test="remarks">
+        <fo:table-cell>
+          <fo:block>
+            <xsl:apply-templates select="remarks"/>
+          </fo:block>
+        </fo:table-cell>
+      </xsl:if>
+    </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="name">
+    <fo:inline>
+      <xsl:apply-templates/>
+    </fo:inline>
+  </xsl:template>
+
+  <xsl:template match="identNumber">
+    <xsl:apply-templates select="manufacturerCode"/>
+    <xsl:text>/</xsl:text>
+    <xsl:apply-templates select="partAndSerialNumber/partNumber"/>
+  </xsl:template>
+
+  <xsl:template match="manufacturerCode">
+    <fo:inline>
+      <xsl:apply-templates/>
+    </fo:inline>
+  </xsl:template>
+
+  <xsl:template match="partNumber">
+    <fo:inline>
+      <xsl:apply-templates/>
+    </fo:inline>
+  </xsl:template>
+
+  <xsl:template match="reqQuantity">
+    <fo:inline>
+      <xsl:apply-templates/>
+    </fo:inline>
+  </xsl:template>
+
+  <xsl:template match="reqCondNoRef">
+    <fo:table-row>
+      <fo:table-cell>
+        <fo:block>
+          <xsl:apply-templates select="reqCond"/>
+        </fo:block>
+      </fo:table-cell>
+    </fo:table-row>
+  </xsl:template>
+
+  <xsl:template match="reqCond">
+    <fo:block>
+      <xsl:apply-templates/>
+    </fo:block>
   </xsl:template>
 
 </xsl:stylesheet>
