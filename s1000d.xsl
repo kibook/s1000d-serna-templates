@@ -85,6 +85,59 @@
 
   <xsl:param name="font-family">Helvetica</xsl:param>
 
+  <xsl:param name="warning-caution-boxes" select="false()"/>
+
+  <xsl:attribute-set name="warning-caution-box">
+    <xsl:attribute name="border-top-width">
+      <xsl:choose>
+        <xsl:when test="$warning-caution-boxes">5pt</xsl:when>
+        <xsl:otherwise>0pt</xsl:otherwise>
+      </xsl:choose>
+    </xsl:attribute>
+    <xsl:attribute name="border-top-color">
+      <xsl:choose>
+        <xsl:when test="self::warning">red</xsl:when>
+        <xsl:when test="self::caution">yellow</xsl:when>
+      </xsl:choose>
+    </xsl:attribute>
+    <xsl:attribute name="border-bottom-width">
+      <xsl:choose>
+        <xsl:when test="$warning-caution-boxes">5pt</xsl:when>
+        <xsl:otherwise>0pt</xsl:otherwise>
+      </xsl:choose>
+    </xsl:attribute>
+    <xsl:attribute name="border-bottom-color">
+      <xsl:choose>
+        <xsl:when test="self::warning">red</xsl:when>
+        <xsl:when test="self::caution">yellow</xsl:when>
+      </xsl:choose>
+    </xsl:attribute>
+    <xsl:attribute name="border-left-width">
+      <xsl:choose>
+        <xsl:when test="$warning-caution-boxes">5pt</xsl:when>
+        <xsl:otherwise>0pt</xsl:otherwise>
+      </xsl:choose>
+    </xsl:attribute>
+    <xsl:attribute name="border-left-color">
+      <xsl:choose>
+        <xsl:when test="self::warning">red</xsl:when>
+        <xsl:when test="self::caution">yellow</xsl:when>
+      </xsl:choose>
+    </xsl:attribute>
+    <xsl:attribute name="border-right-width">
+      <xsl:choose>
+        <xsl:when test="$warning-caution-boxes">5pt</xsl:when>
+        <xsl:otherwise>0pt</xsl:otherwise>
+      </xsl:choose>
+    </xsl:attribute>
+    <xsl:attribute name="border-right-color">
+      <xsl:choose>
+        <xsl:when test="self::warning">red</xsl:when>
+        <xsl:when test="self::caution">yellow</xsl:when>
+      </xsl:choose>
+    </xsl:attribute>
+  </xsl:attribute-set>
+
   <xsl:template match="/">
     <fo:root>
       <fo:layout-master-set>
@@ -619,22 +672,26 @@
   </xsl:template>
 
   <xsl:template match="warning">
-    <fo:block padding-top="14pt">
-      <fo:block text-align="center" font-weight="bold" font-size="12pt" text-decoration="underline">WARNING</fo:block>
-      <xsl:apply-templates/>
+    <fo:block padding-top="14pt" start-indent="{$inner-type-limit}">
+      <fo:block xsl:use-attribute-sets="warning-caution-box">
+        <fo:block text-align="center" font-weight="bold" font-size="12pt" text-decoration="underline">WARNING</fo:block>
+        <xsl:apply-templates select="*"/>
+      </fo:block>
     </fo:block>
   </xsl:template>
   
   <xsl:template match="warningAndCautionPara">
-    <fo:block padding-top="{$standard-leading}" start-indent="{$inner-type-limit}">
+    <fo:block padding-top="{$standard-leading}" start-indent="{$inner-type-limit}" font-weight="bold">
       <xsl:apply-templates/>
     </fo:block>
   </xsl:template>
 
   <xsl:template match="caution">
-    <fo:block padding-top="14pt">
-      <fo:block text-align="center" font-weight="bold" font-size="12pt">CAUTION</fo:block>
-      <xsl:apply-templates/>
+    <fo:block padding-top="14pt" start-indent="{$inner-type-limit}">
+      <fo:block xsl:use-attribute-sets="warning-caution-box">
+        <fo:block text-align="center" font-weight="bold" font-size="12pt">CAUTION</fo:block>
+        <xsl:apply-templates select="*"/>
+      </fo:block>
     </fo:block>
   </xsl:template>
 
@@ -877,6 +934,24 @@
   <xsl:template match="reqCond">
     <fo:block>
       <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="reqSafety">
+    <fo:block>
+      <fo:block xsl:use-attribute-sets="sidehead0">Safety conditions</fo:block>
+      <xsl:apply-templates select="*"/>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="noSafety">
+    <fo:block start-indent="{$inner-type-limit}" padding-top="{$standard-leading}">None</fo:block>
+  </xsl:template>
+
+  <xsl:template match="closeRqmts">
+    <fo:block>
+      <fo:block xsl:use-attribute-sets="centerhead2">Requirements after job completion</fo:block>
+      <xsl:apply-templates select="*"/>
     </fo:block>
   </xsl:template>
 
