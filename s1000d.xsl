@@ -116,7 +116,7 @@
   </xsl:template>
 
   <xsl:template name="header">
-    <fo:block font-weight="bold" text-align="center" padding-bottom="5mm" font-size="11pt">Unclassified</fo:block>
+    <fo:block font-weight="bold" text-align="center" padding-bottom="5mm">Unclassified</fo:block>
   </xsl:template>
 
   <xsl:template name="footer">
@@ -127,14 +127,14 @@
         <fo:table-column column-width="proportional-column-width(1)"/>
         <fo:table-body>
           <fo:table-row>
-            <fo:table-cell text-align="left">
+            <fo:table-cell text-align="left" number-rows-spanned="2">
               <fo:block>
                 <xsl:text>Applicable to: </xsl:text>
                 <xsl:apply-templates select="identAndStatusSection/dmStatus/applic/displayText"/>
               </fo:block>
             </fo:table-cell>
             <fo:table-cell text-align="center" font-weight="bold">
-              <fo:block font-size="11pt">End of data module</fo:block>
+              <fo:block>End of data module</fo:block>
             </fo:table-cell>
             <fo:table-cell text-align="right" font-weight="bold">
               <fo:block>
@@ -142,9 +142,25 @@
               </fo:block>
             </fo:table-cell>
           </fo:table-row>
+          <fo:table-row>
+            <fo:table-cell text-align="center" font-weight="bold">
+              <fo:block>Unclassified</fo:block>
+            </fo:table-cell>
+            <fo:table-cell text-align="right" font-weight="bold">
+              <xsl:apply-templates select="identAndStatusSection/dmAddress/dmAddressItems/issueDate"/>
+            </fo:table-cell>
+          </fo:table-row>
         </fo:table-body>
       </fo:table>
     </fo:block>
+  </xsl:template>
+
+  <xsl:template match="issueDate">
+    <xsl:value-of select="@year"/>
+    <xsl:text>-</xsl:text>
+    <xsl:value-of select="@month"/>
+    <xsl:text>-</xsl:text>
+    <xsl:value-of select="@day"/>
   </xsl:template>
 
   <xsl:template match="simplePara">
