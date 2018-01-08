@@ -1115,4 +1115,22 @@
     <xsl:number count="listItem" level="multiple"/>
   </xsl:template>
 
+  <xsl:template match="note">
+    <fo:block padding-top="{$standard-leading}" start-indent="{$inner-type-limit}">
+      <fo:block font-weight="bold">Note</fo:block>
+      <xsl:apply-templates select="notePara"/>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template match="notePara">
+    <fo:block start-indent="27mm">
+      <xsl:if test="preceding-sibling::*">
+        <xsl:attribute name="padding-top">
+          <xsl:value-of select="$standard-leading"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates/>
+    </fo:block>
+  </xsl:template>
+
 </xsl:stylesheet>
